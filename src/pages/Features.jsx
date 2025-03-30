@@ -25,6 +25,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import GroupIcon from "@mui/icons-material/Group";
+import { useNavigate } from "react-router-dom";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
@@ -53,6 +54,7 @@ const itemVariants = {
 
 const Features = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const features = [
     {
@@ -123,6 +125,13 @@ const Features = () => {
     { label: "Success Rate", value: "95%" },
     { label: "Community Members", value: "100K+" },
   ];
+
+  const handleFeatureClick = (feature) => {
+    if (feature.title === "Fitness Tracking") {
+      navigate("/signup");
+    }
+    // Add navigation for other features as needed
+  };
 
   return (
     <MotionBox
@@ -203,6 +212,7 @@ const Features = () => {
                     transform: "translateY(-8px)",
                   },
                 }}
+                onClick={() => handleFeatureClick(feature)}
               >
                 <CardMedia
                   component="img"

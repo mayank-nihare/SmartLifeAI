@@ -9,6 +9,7 @@ import {
   CardContent,
   CardMedia,
   Paper,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
@@ -19,9 +20,30 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import GroupIcon from "@mui/icons-material/Group";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { motion } from "framer-motion";
+import { useUser } from "../context/UserContext";
+
+const MotionBox = motion.create(Box);
+const MotionCard = motion.create(Card);
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const { user } = useUser();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate("/fitness-assessment");
+    } else {
+      navigate("/signup");
+    }
+  };
+
+  const handleFeatureClick = (feature) => {
+    if (feature.title === "Fitness Tracking") {
+      handleGetStarted();
+    }
+  };
 
   const features = [
     {
@@ -31,6 +53,7 @@ const LandingPage = () => {
       icon: <FitnessCenterIcon sx={{ fontSize: 40 }} />,
       image:
         "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      isClickable: true,
     },
     {
       title: "Health Monitoring",
@@ -82,83 +105,63 @@ const LandingPage = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Box
+      <MotionBox
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         sx={{
-          position: "relative",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          overflow: "hidden",
-          bgcolor: "primary.main",
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
           color: "white",
+          py: 8,
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <Box
-          component="img"
-          src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-          alt="Hero"
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: 0.2,
-          }}
-        />
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
-              <Typography variant="h1" component="h1" gutterBottom>
+              <Typography
+                variant="h2"
+                component="h1"
+                gutterBottom
+                sx={{ fontWeight: 700 }}
+              >
                 Transform Your Life with SmartLife AI
               </Typography>
-              <Typography variant="h5" sx={{ mb: 4 }}>
-                Your personal AI-powered fitness companion for achieving your
-                health and wellness goals
+              <Typography variant="h5" paragraph sx={{ mb: 4 }}>
+                Your personal AI-powered fitness companion for a healthier,
+                happier lifestyle.
               </Typography>
               <Button
                 variant="contained"
                 size="large"
-                endIcon={<ArrowForwardIcon />}
-                onClick={() => navigate("/signup")}
+                onClick={handleGetStarted}
                 sx={{
                   bgcolor: "white",
-                  color: "primary.main",
+                  color: theme.palette.primary.main,
                   "&:hover": {
-                    bgcolor: "white",
-                    opacity: 0.9,
+                    bgcolor: "rgba(255, 255, 255, 0.9)",
                   },
                 }}
               >
-                Get Started Now
+                {user ? "Continue Your Journey" : "Get Started"}
               </Button>
             </Grid>
             <Grid item xs={12} md={6}>
               <Box
+                component="img"
+                src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                alt="Feature Preview"
                 sx={{
-                  position: "relative",
-                  height: 400,
-                  borderRadius: 2,
-                  overflow: "hidden",
-                  boxShadow: 3,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                 }}
-              >
-                <Box
-                  component="img"
-                  src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                  alt="Feature Preview"
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              </Box>
+              />
             </Grid>
           </Grid>
         </Container>
-      </Box>
+      </MotionBox>
 
       {/* Features Section */}
       <Box sx={{ py: 8, bgcolor: "background.default" }}>
@@ -176,14 +179,19 @@ const LandingPage = () => {
           <Grid container spacing={4}>
             {features.map((feature) => (
               <Grid item xs={12} md={6} key={feature.title}>
-                <Card
+                <MotionCard
+                  whileHover={{ y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() =>
+                    feature.isClickable && handleFeatureClick(feature)
+                  }
                   sx={{
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
-                    transition: "transform 0.3s ease-in-out",
+                    cursor: feature.isClickable ? "pointer" : "default",
                     "&:hover": {
-                      transform: "translateY(-8px)",
+                      boxShadow: feature.isClickable ? 6 : 1,
                     },
                   }}
                 >
@@ -212,8 +220,22 @@ const LandingPage = () => {
                     <Typography variant="body1" paragraph>
                       {feature.description}
                     </Typography>
+                    {feature.isClickable && (
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", mt: 2 }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="primary"
+                          sx={{ mr: 1 }}
+                        >
+                          Try it now
+                        </Typography>
+                        <ArrowForwardIcon color="primary" />
+                      </Box>
+                    )}
                   </CardContent>
-                </Card>
+                </MotionCard>
               </Grid>
             ))}
           </Grid>
@@ -267,39 +289,41 @@ const LandingPage = () => {
       </Box>
 
       {/* Call to Action */}
-      <Box sx={{ py: 8, bgcolor: "background.default" }}>
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              textAlign: "center",
-              bgcolor: "primary.main",
-              borderRadius: 2,
-              p: 6,
-              color: "white",
-            }}
+      <Box
+        sx={{
+          py: 8,
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+          color: "white",
+        }}
+      >
+        <Container maxWidth="md">
+          <Typography
+            variant="h3"
+            component="h2"
+            align="center"
+            gutterBottom
+            sx={{ mb: 4, fontWeight: 700 }}
           >
-            <Typography variant="h2" component="h2" gutterBottom>
-              Ready to Start Your Fitness Journey?
-            </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              Join thousands of users who have transformed their lives with
-              SmartLife AI
-            </Typography>
+            Ready to Transform Your Life?
+          </Typography>
+          <Typography variant="h6" align="center" paragraph sx={{ mb: 4 }}>
+            Join thousands of users who have already started their fitness
+            journey with SmartLife AI.
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button
               variant="contained"
               size="large"
-              endIcon={<ArrowForwardIcon />}
-              onClick={() => navigate("/signup")}
+              onClick={handleGetStarted}
               sx={{
                 bgcolor: "white",
-                color: "primary.main",
+                color: theme.palette.primary.main,
                 "&:hover": {
-                  bgcolor: "white",
-                  opacity: 0.9,
+                  bgcolor: "rgba(255, 255, 255, 0.9)",
                 },
               }}
             >
-              Get Started Now
+              {user ? "Continue Your Journey" : "Get Started Now"}
             </Button>
           </Box>
         </Container>

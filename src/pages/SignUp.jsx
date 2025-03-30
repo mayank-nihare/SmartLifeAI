@@ -13,12 +13,14 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles";
+import { useUser } from "../context/UserContext";
 
 const MotionBox = motion(Box);
 
 const SignUp = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { login } = useUser();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -45,14 +47,21 @@ const SignUp = () => {
       return;
     }
 
-    // Here you would typically make an API call to your backend
-    // For now, we'll just simulate a successful registration
     try {
-      // Simulate API call
+      // Here you would typically make an API call to your backend
+      // For now, we'll just simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Navigate to dashboard on success
-      navigate("/dashboard");
+      // Simulate user data from backend
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        profileImage: "",
+      };
+
+      login(userData);
+      navigate("/fitness-assessment");
     } catch (err) {
       setError("Registration failed. Please try again.");
     }

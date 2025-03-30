@@ -40,7 +40,7 @@ const Login = () => {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Navigate to dashboard on success
       navigate('/dashboard');
     } catch (err) {

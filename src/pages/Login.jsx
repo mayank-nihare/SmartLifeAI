@@ -12,12 +12,14 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles";
+import { useUser } from "../context/UserContext";
 
 const MotionBox = motion(Box);
 
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { login } = useUser();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,16 +37,23 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    // Here you would typically make an API call to your backend
-    // For now, we'll just simulate a successful login
     try {
-      // Simulate API call
+      // Here you would typically make an API call to your backend
+      // For now, we'll just simulate a successful login
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Navigate to dashboard on success
+      // Simulate user data from backend
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: formData.email,
+        profileImage: "",
+      };
+
+      login(userData);
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid email or password");
+      setError("Login failed. Please check your credentials.");
     }
   };
 

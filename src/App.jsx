@@ -8,6 +8,8 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import Features from "./pages/Features";
+import FitnessAssessment from "./pages/FitnessAssessment";
+import { UserProvider } from "./context/UserContext";
 
 const theme = createTheme({
   palette: {
@@ -76,17 +78,20 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/features" element={<Features />} />
-        </Routes>
-      </Router>
+      <UserProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/fitness-assessment" element={<FitnessAssessment />} />
+          </Routes>
+        </Router>
+      </UserProvider>
     </ThemeProvider>
   );
 }
